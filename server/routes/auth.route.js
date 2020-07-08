@@ -10,7 +10,10 @@ router.post('/register', async (req, res) => {
     //lets validate the data before we a user
     const { error } = registerValidation(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).json({
+            success: false,
+            messages: error.details[0].message
+        });;
     }
 
     //checking if the user is already in the database
@@ -45,7 +48,10 @@ router.post('/login', async (req, res) => {
 
     const { error } = loginValidation(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).json({
+            success: false,
+            messages: error.details[0].message
+        });
     }
 
     //checking if the user is already in the database
@@ -59,9 +65,16 @@ router.post('/login', async (req, res) => {
         return res.status(400).send('Invalid Password');
     }
 
-    const token = jwt.sign({ user: { _id: user.id, name: user.name, date: user.date } }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user.id, name: user.name, email: user.email }, process.env.JWT_SECRET);
 
-    res.header('authorization').send({ token });
+    res.header('authorization').send({
+        success: true,
+        user: {
+            name: user.name,
+            email: user.email
+        },
+        token
+    });
 })
 
 module.exports = router;

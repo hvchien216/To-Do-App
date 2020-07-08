@@ -10,6 +10,11 @@ const toDoSchema = new mongoose.Schema({
         type: String,
         max: 255
     },
+    status: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

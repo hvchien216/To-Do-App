@@ -10,6 +10,7 @@ module.exports = function (req, res, next) {
         const bearerToken = bearer[1];
 
         const verified = jwt.verify(bearerToken, process.env.JWT_SECRET);
+        // console.log(verified);
         req.user = verified;
         next();
     } catch (err) {
