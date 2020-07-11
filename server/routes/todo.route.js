@@ -19,7 +19,8 @@ router.post('/create', verify, async (req, res) => {
     const todo = new Todo({
         title: title,
         description: description,
-        user: _id
+        status: 0,
+        user: _id,
     });
 
     try {
@@ -37,12 +38,28 @@ router.post('/create', verify, async (req, res) => {
 })
 
 router.get('/', verify, async (req, res) => {
+    const { q } = req.query;
     const { _id } = req.user;
-    const todo = await Todo.find({ user: _id });
+    let query = {};
+    if (q) {
+        query = {
+            $and: [{
+                $or: [{ title: { $regex: q, $options: 'i' } },
+                { description: { $regex: q, $options: 'i' } }]
+            },
+            { user: _id }]
+        };
+    }
+    else {
+        query = { user: _id };
+    }
+
+    const todo = await Todo.find(query);
     res.json({
         success: true,
         data: todo
     });
+
 })
 
 router.put('/:id', verify, async (req, res) => {

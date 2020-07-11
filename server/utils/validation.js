@@ -37,7 +37,6 @@ const createTodoValidation = (data) => {
             .min(2)
             .required(),
         description: Joi.string(),
-        userId: Joi.required(),
     });
     return schema.validate(data);
 }
