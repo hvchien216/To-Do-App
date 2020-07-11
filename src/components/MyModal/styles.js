@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
+
 export const useStyles = makeStyles(theme => ({
   modal: {
     top: '50%',
@@ -15,13 +16,5 @@ export const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'space-between',
     cursor: 'pointer'
-  },
-  boxActions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 200,
   },
 }));

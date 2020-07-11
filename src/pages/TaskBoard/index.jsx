@@ -1,21 +1,31 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { useStyles } from "./styles";
-import { Button, Grid } from "@material-ui/core";
-import { toast } from "react-toastify";
+import { Button, Grid, Box } from "@material-ui/core";
 //icon
-import { AddCircle, Edit } from "@material-ui/icons";
-import { STATUSES } from "./../../contants";
-import TaskList from "../../components/TaskList";
-import SearchBox from "../../components/SearchBox";
-import TaskForm from "../../components/TaskForm";
+import { AddCircle } from "@material-ui/icons";
+import PropTypes from "prop-types";
+import qs from "query-string";
+import React, { useEffect, useRef } from "react";
 //redux
 import { connect } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import SearchBox from "../../components/SearchBox";
+import TaskForm from "../../components/TaskForm";
+import TaskList from "../../components/TaskList";
+import { STATUSES } from "./../../contants";
 import {
-  fetchListTaskRequest,
+  changeModalContent,
+  changeModalTitle,
+  hideModal,
+  showModal,
+} from "./../../redux/actions/modal";
+import {
   fetchListTask,
+  fetchListTaskRequest,
   filterTask,
+  setTaskEditing,
+  deleteTask,
 } from "./../../redux/actions/task";
+import { useStyles } from "./styles";
 const data = [
   {
     id: 1,
@@ -39,13 +49,54 @@ const data = [
 
 function TaskBoard(props) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  // const [open, setOpen] = useState(false);
-
+  let location = useLocation();
+  const selectRef = useRef(null);
   useEffect(() => {
     // props.fetchListTaskRequest();
-    props.fetchListTask();
+    let q = qs.parse(location.search);
+    props.fetchListTask(q.q);
   }, []);
+
+  const handleEdit = (task) => {
+    props.setTaskEditing(task);
+    props.showModal();
+    props.changeModalTitle("Cập nhật công việc");
+    props.changeModalContent(<TaskForm />);
+  };
+
+  const handleDeleteTask = (task) => {
+    props.deleteTask(task._id);
+    props.hideModal();
+  };
+
+  const handleDelete = (task) => {
+    props.showModal();
+    props.changeModalTitle("Xóa công việc");
+    props.changeModalContent(
+      <div className={classes.modalDelete}>
+        <div className={classes.modalConfirmText}>
+          Bạn chắc chắn muốn xóa{" "}
+          <span className={classes.modalConfirmTextBold}>{task.title}</span>?
+        </div>
+        <Box display="flex" flexDirection="row-reverse" mt={2}>
+          <Box ml={1}>
+            <Button variant="contained" onClick={props.hideModal}>
+              Hủy Bỏ
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleDeleteTask(task)}
+            >
+              Đồng Ý
+            </Button>
+          </Box>
+        </Box>
+      </div>
+    );
+  };
 
   const renderBoard = () => {
     const { listTask } = props;
@@ -58,7 +109,13 @@ function TaskBoard(props) {
             (item) => item.status === status.value
           );
           return (
-            <TaskList key={status.value} tasks={taskFilter} status={status} />
+            <TaskList
+              key={status.value}
+              tasks={taskFilter}
+              status={status}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           );
         })}
       </Grid>
@@ -68,20 +125,23 @@ function TaskBoard(props) {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    // setOpen(false);
   };
 
   const openForm = () => {
-    setOpen(true);
+    props.setTaskEditing(null);
+    props.showModal();
+    props.changeModalTitle("Thêm mới công việc");
+    props.changeModalContent(<TaskForm />);
   };
 
-  const renderForm = () => {
-    let xhtml = null;
+  // const renderForm = () => {
+  //   let xhtml = null;
 
-    xhtml = <TaskForm open={open} handleClose={handleClose} />;
+  //   xhtml = <TaskForm handleClose={handleClose} />;
 
-    return xhtml;
-  };
+  //   return xhtml;
+  // };
 
   const handleChange = (e) => {
     props.filterTask(e.target.value);
@@ -130,7 +190,7 @@ function TaskBoard(props) {
         </Button>
         {renderSearchBox()}
         {renderBoard()}
-        {renderForm()}
+        {/* {renderForm()} */}
       </div>
     </>
   );
@@ -141,6 +201,12 @@ TaskBoard.propTypes = {
   fetchListTaskRequest: PropTypes.func.isRequired,
   fetchListTask: PropTypes.func.isRequired,
   filterTask: PropTypes.func.isRequired,
+  showModal: PropTypes.func.isRequired,
+  hideModal: PropTypes.func.isRequired,
+  changeModalTitle: PropTypes.func.isRequired,
+  changeModalContent: PropTypes.func.isRequired,
+  setTaskEditing: PropTypes.func.isRequired,
+  deleteTask: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -152,6 +218,12 @@ const mapDispatchToProps = {
   fetchListTaskRequest,
   fetchListTask,
   filterTask,
+  showModal,
+  hideModal,
+  changeModalTitle,
+  changeModalContent,
+  setTaskEditing,
+  deleteTask,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskBoard);

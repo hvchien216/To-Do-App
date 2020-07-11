@@ -1,14 +1,14 @@
 import axiosClient from "./axiosClient";
 
 const taskApi = {
-  getAll: () => {
+  getAll: (params = {}) => {
     const url = '/todo';
-    return axiosClient.get(url);
+    return axiosClient.get(url, { params });
   },
 
   add: (data) => {
     const url = '/todo/create';
-    return axiosClient.post(url, { data });
+    return axiosClient.post(url, data);
   },
   edit: (id, data) => {
     const url = `/todo/${id}`;

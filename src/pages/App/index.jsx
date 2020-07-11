@@ -7,14 +7,19 @@ import store from "./../../redux/store";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GlobalLoading from "../../components/GlobalLoading";
+import MyModal from "../../components/MyModal";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 function App() {
   return (
     <Provider store={store()}>
-      <ThemeProvider theme={theme}>
-        <ToastContainer autoClose={3000} />
-        <TaskBoard />
-        <GlobalLoading />
-      </ThemeProvider>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <ToastContainer autoClose={3000} />
+          <GlobalLoading />
+          <MyModal />
+          <Route path="/" component={TaskBoard} />
+        </ThemeProvider>
+      </Router>
     </Provider>
   );
 }

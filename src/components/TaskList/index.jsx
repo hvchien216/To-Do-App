@@ -7,7 +7,7 @@ import { Grid, Box } from "@material-ui/core";
 function TaskList(props) {
   const classes = useStyles();
 
-  const { status, tasks } = props;
+  const { status, tasks, handleEdit, handleDelete } = props;
 
   return (
     <Grid item md={4}>
@@ -17,7 +17,13 @@ function TaskList(props) {
       <div className={classes.wrapperTask}>
         {tasks.map((task) => {
           return (
-            <TaskItem key={"task" + task._id} task={task} status={status} />
+            <TaskItem
+              key={"task" + task._id}
+              task={task}
+              status={status}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           );
         })}
       </div>
