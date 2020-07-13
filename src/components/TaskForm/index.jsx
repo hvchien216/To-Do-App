@@ -1,22 +1,35 @@
 import {
   Button,
   Grid,
-  TextField,
   FormControl,
   InputLabel,
-  Select,
   MenuItem,
+  TextField,
+  Select,
 } from "@material-ui/core";
-import React, { useReducer, forwardRef } from "react";
+import { FastField, Form, Formik } from "formik";
 import PropTypes from "prop-types";
-import { useStyles } from "./styles";
+import React, { useReducer } from "react";
 import { connect } from "react-redux";
+import * as Yup from "yup";
+import SelectCustom from "../SelectCustom";
+import { FIELDS_OF_TASK, STATUSES } from "./../../contants";
 import { hideModal } from "./../../redux/actions/modal";
 import { addTask, updateTask } from "./../../redux/actions/task";
-import { STATUSES } from "./../../contants";
+import InputField from "./../InputField";
+import { useStyles } from "./styles";
 const TaskForm = (props) => {
   const classes = useStyles();
   const { hideModal, taskEditing } = props;
+
+  const validationSchema = Yup.object().shape({
+    title: Yup.string().required("Title is not empty"),
+
+    description: Yup.string().required("Description is not empty"),
+
+    status: Yup.number(),
+  });
+
   const [formValues, setFormValues] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -28,8 +41,9 @@ const TaskForm = (props) => {
 
   const { title, description, status } = formValues;
 
-  const handleChange = (e) => {
+  const handleChangeValue = (e) => {
     const { name, value } = e.target;
+    console.log("value of form==>", name, value);
     setFormValues({ [name]: value });
   };
 
@@ -53,7 +67,7 @@ const TaskForm = (props) => {
           id="status"
           name="status"
           value={status}
-          onChange={handleChange}
+          onChange={handleChangeValue}
         >
           {STATUSES.map((item) => (
             <MenuItem key={"option" + item.value} value={item.value}>
@@ -66,8 +80,75 @@ const TaskForm = (props) => {
 
     return xhtml;
   };
+  // const renderFields = (inputs, onChange) => {
+  //   return inputs.map((input) => {
+  //     if (input.type === "select") {
+  //       if (taskEditing) {
+  //         return (
+  //           <Grid item md={12} key={"input" + input.name}>
+  //             <FastField
+  //               name={input.name}
+  //               component={SelectCustom}
+  //               onChange={onChange}
+  //               label={input.label}
+  //               options={input.options}
+  //             />
+  //           </Grid>
+  //         );
+  //       }
+  //       return null;
+  //     }
+
+  //     return (
+  //       <Grid item md={12} key={"input" + input.name}>
+  //         <FastField
+  //           name={input.name}
+  //           component={InputField}
+  //           onChange={onChange}
+  //           label={input.label}
+  //           autoFocus={input.name === "title"}
+  //         />
+  //       </Grid>
+  //     );
+  //   });
+  // };
 
   return (
+    // <Formik
+    //   initialValues={formValues}
+    //   validationSchema={validationSchema}
+    //   onSubmit={handleSubmit}
+    // >
+    //   {(formikProps) => {
+    //     console.log("formikProps==>", formikProps);
+    //     const { handleChange } = formikProps;
+    //     const onChange = (e) => {
+    //       handleChangeValue(e);
+    //       return handleChange(e);
+    //     };
+
+    //     return (
+    //       <Form className={classes.form}>
+    //         <Grid container spacing={1}>
+    //           {renderFields(FIELDS_OF_TASK, onChange)}
+    //           <Grid item md={12} className={classes.boxActions}>
+    //             <Button color="primary" variant="contained" type="submit">
+    //               Lưu lại
+    //             </Button>
+    //             <Button
+    //               style={{ marginLeft: "8px" }}
+    //               color="secondary"
+    //               variant="outlined"
+    //               onClick={hideModal}
+    //             >
+    //               Hủy bỏ
+    //             </Button>
+    //           </Grid>
+    //         </Grid>
+    //       </Form>
+    //     );
+    //   }}
+    // </Formik>
     <form action="" onSubmit={handleSubmit} id="form">
       <Grid container spacing={1}>
         <Grid item md={12}>
@@ -77,7 +158,7 @@ const TaskForm = (props) => {
             fullWidth
             margin="normal"
             name="title"
-            onChange={handleChange}
+            onChange={handleChangeValue}
             variant="filled"
             value={title}
           />
@@ -86,7 +167,7 @@ const TaskForm = (props) => {
           <TextField
             label="Description"
             name="description"
-            onChange={handleChange}
+            onChange={handleChangeValue}
             fullWidth
             multiline
             rowsMax="4"

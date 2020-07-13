@@ -8,7 +8,7 @@ import {
   select,
   takeEvery
 } from 'redux-saga/effects';
-import { FETCH_TASK, FILTER_TASK, ADD_TASK, UPDATE_TASK, DELETE_TASK } from './../redux/types';
+import { FETCH_TASK, FILTER_TASK, ADD_TASK, UPDATE_TASK, DELETE_TASK, LOGIN, REGISTER } from './../redux/types';
 import {
   fetchListTaskSuccess,
   fetchListTaskFailed,
@@ -22,11 +22,19 @@ import {
   deleteTaskFailed
 } from './../redux/actions/task';
 import {
+  loginUserSuccess,
+  loginUserFailed,
+  savedToLocal,
+  registerUserSuccess,
+  registerUserFailed
+} from './../redux/actions/user';
+import {
   showLoading,
   hideLoading
 } from './../redux/actions/ui';
 
 import taskApi from './../api/taskApi';
+import userApi from './../api/userApi';
 // import { STATUSES } from './../contants';
 function* watchFetchListTaskAction() {
   while (true) {
@@ -110,6 +118,45 @@ function* deleteTaskSaga({ payload }) {
   yield put(hideLoading());
 }
 
+function* loginUserSaga({ payload }) {
+  const { email, password, history, setSubmitting } = payload;
+
+  try {
+    const { data } = yield call(userApi.login, {
+      email,
+      password
+    })
+    if (!data.success) {
+      yield put(loginUserFailed(data, setSubmitting));
+      return;
+    }
+    savedToLocal(data);
+    yield put(loginUserSuccess(data.user, history));
+
+  } catch (error) {
+    yield put(loginUserFailed(error));
+  }
+}
+
+function* registerUserSaga({ payload }) {
+  const { name, email, password, history, setSubmitting } = payload;
+  try {
+    const { data } = yield call(userApi.register, {
+      name,
+      email,
+      password
+    })
+    if (!data.success) {
+      yield put(registerUserFailed(data, setSubmitting));
+      return;
+    }
+    yield put(registerUserSuccess(data.user, history));
+
+  } catch (error) {
+    yield put(registerUserFailed(error));
+  }
+}
+
 function* rootSaga() {
   yield true;
   yield fork(watchFetchListTaskAction);
@@ -117,6 +164,8 @@ function* rootSaga() {
   yield takeEvery(ADD_TASK, addTaskSaga)
   yield takeEvery(UPDATE_TASK, updateTaskSaga)
   yield takeEvery(DELETE_TASK, deleteTaskSaga)
+  yield takeEvery(LOGIN, loginUserSaga)
+  yield takeEvery(REGISTER, registerUserSaga)
 }
 
 export default rootSaga;

@@ -1,30 +1,28 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useStyles } from "./styles";
-import {
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
-  Fab,
-  TextField,
-} from "@material-ui/core";
-import { Edit, Delete } from "@material-ui/icons";
+import { InputBase } from "@material-ui/core";
+import { Search } from "@material-ui/icons";
 
 function SearchBox(props) {
   const classes = useStyles();
   const { handleChange } = props;
 
   return (
-    <form className={classes.container} noValidate autoComplete="off">
-      <TextField
-        className={classes.textField}
+    <div className={classes.search}>
+      <div className={classes.searchIcon}>
+        <Search />
+      </div>
+      <InputBase
+        placeholder="Search…"
+        classes={{
+          root: classes.inputRoot,
+          input: classes.inputInput,
+        }}
+        inputProps={{ "aria-label": "search" }}
         onChange={handleChange}
-        margin="normal"
       />
-    </form>
+    </div>
   );
 }
 

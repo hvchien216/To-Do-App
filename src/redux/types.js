@@ -25,8 +25,22 @@ export const DELETE_TASK_FAILED = 'DELETE_TASK_FAILED';
 export const SHOW_LOADING = 'SHOW_LOADING';
 export const HIDE_LOADING = 'HIDE_LOADING';
 
+export const SHOW_SIDEBAR = 'SHOW_SIDEBAR';
+export const HIDE_SIDEBAR = 'HIDE_SIDEBAR';
+
 //modal
 export const SHOW_MODAL = 'SHOW_MODAL';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const CHANGE_MODAL_CONTENT = 'CHANGE_MODAL_CONTENT';
 export const CHANGE_MODAL_TITLE = 'CHANGE_MODAL_TITLE';
+
+//user
+export const LOGIN = 'LOGIN';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILED = 'LOGIN_FAILED';
+
+export const LOGOUT = 'LOGOUT';
+
+export const REGISTER = 'REGISTER';
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+export const REGISTER_FAILED = 'REGISTER_FAILED';

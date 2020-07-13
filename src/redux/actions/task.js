@@ -111,6 +111,9 @@ export const setTaskEditing = task => dispatch => {
 }
 
 export const updateTask = (_id, title, description, status) => dispatch => {
+  console.log("data of updateTask===>", {
+    _id, title, description, status
+  })
   dispatch({
     type: UPDATE_TASK,
     payload: {

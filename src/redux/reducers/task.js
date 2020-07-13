@@ -17,7 +17,7 @@ import {
   DELETE_TASK_FAILED,
 
 } from './../types';
-import { toastError } from '../../helpers/toastHelper';
+import { toastError, toastSuccess } from '../../helpers/toastHelper';
 
 const initialState = {
   listTask: [],
@@ -61,6 +61,7 @@ export default function (state = initialState, action) {
     }
     case ADD_TASK_SUCCESS: {
       const { data } = action.payload;
+      toastSuccess('Thêm mới công việc thành công');
       return {
         ...state,
         listTask: [data, ...state.listTask]
@@ -90,11 +91,15 @@ export default function (state = initialState, action) {
       const { listTask } = state;
       const index = listTask.findIndex(item => item._id === data._id);
       if (index !== -1) {
+        toastSuccess('Cập nhật công việc thành công');
+
         const newList = [
           ...listTask.slice(0, index),
           data,
           ...listTask.slice(index + 1),
         ]
+        console.log("index in Task reducer===>", index, listTask);
+        console.log("newList in Task reducer===>", newList);
 
         return {
           ...state,
@@ -113,6 +118,7 @@ export default function (state = initialState, action) {
     case DELETE_TASK_SUCCESS: {
       const { data } = action.payload;
       const { listTask } = state;
+      toastSuccess('Xóa công việc thành công');
       return {
         ...state,
         listTask: listTask.filter(ele => ele._id !== data._id),

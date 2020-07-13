@@ -12,7 +12,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(async (config) => {
   // Handle token here ...
   const userStorage = localStorage.getItem('user');
-  const token = JSON.parse(userStorage).token;
+  const token = userStorage ? JSON.parse(userStorage).token : null;
   if (token) {
     config.headers['Authorization'] = 'Bearer ' + token;
   }

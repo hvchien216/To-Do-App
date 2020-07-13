@@ -1,11 +1,19 @@
 import { toast } from "react-toastify";
 
 export const toastError = err => {
-  let message = null;
-  if (typeof err === 'object' && err.message) {
-    ({ message } = err);
-  }
+  // let message = null;
+  // if (typeof err === 'object' && err.message) {
+  //   ({ message } = err);
+  // }
+  // if (message !== null && typeof message !== 'undefined' && message !== '') {
+  //   toast.error(message);
+  // }
+  toast.error(err.messages);
+
+}
+
+export const toastSuccess = message => {
   if (message !== null && typeof message !== 'undefined' && message !== '') {
-    toast.error(message);
+    toast.success(message);
   }
 }
