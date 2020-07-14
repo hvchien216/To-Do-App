@@ -98,9 +98,6 @@ export default function (state = initialState, action) {
           data,
           ...listTask.slice(index + 1),
         ]
-        console.log("index in Task reducer===>", index, listTask);
-        console.log("newList in Task reducer===>", newList);
-
         return {
           ...state,
           listTask: newList,

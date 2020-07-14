@@ -82,7 +82,6 @@ function RegisterPage(props) {
           onSubmit={handleSubmit}
         >
           {(formikProps) => {
-            console.log("formik Props ==???????????", formikProps);
             const { handleChange, isSubmitting } = formikProps;
             const onChange = (e) => {
               handleChangeValue(e);

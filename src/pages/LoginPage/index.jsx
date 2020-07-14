@@ -39,7 +39,6 @@ function LoginPage(props) {
 
   const handleChangeValue = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setFormValues({ [name]: value });
   };
 

@@ -43,7 +43,6 @@ const TaskForm = (props) => {
 
   const handleChangeValue = (e) => {
     const { name, value } = e.target;
-    console.log("value of form==>", name, value);
     setFormValues({ [name]: value });
   };
 
@@ -120,7 +119,6 @@ const TaskForm = (props) => {
     //   onSubmit={handleSubmit}
     // >
     //   {(formikProps) => {
-    //     console.log("formikProps==>", formikProps);
     //     const { handleChange } = formikProps;
     //     const onChange = (e) => {
     //       handleChangeValue(e);

@@ -107,7 +107,6 @@ function TaskBoard(props) {
     props.changeModalTitle("Thêm mới công việc");
     props.changeModalContent(<TaskForm />);
   };
-  console.log("listTask of Taskborad===>", props.listTask);
   return (
     <>
       <div className={classes.taskBoard}>
